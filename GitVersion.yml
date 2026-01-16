@@ -1,4 +1,4 @@
-mode: ContinuousDelivery
+mode: ManualDeployment
 next-version: 0.1.0
 assembly-versioning-scheme: MajorMinorPatch
 assembly-file-versioning-scheme: MajorMinorPatchTag
@@ -7,7 +7,7 @@ tag-prefix: '[vV]?'
 branches:
   main:
     regex: ^main$
-    mode: ContinuousDelivery
+    mode: ManualDeployment
     label: ''
     increment: Patch
     source-branches:
@@ -29,7 +29,7 @@ branches:
   pull-request:
     regex: ^(pull|pull\-requests|pr)[/-]
     mode: ContinuousDelivery
-    label: PullRequest
+    label: pr
     increment: Inherit
     source-branches:
       - main
