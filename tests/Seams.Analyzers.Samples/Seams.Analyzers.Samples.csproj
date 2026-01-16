@@ -3,7 +3,7 @@
   <PropertyGroup>
     <!-- Multi-target to validate analyzer works across different .NET versions -->
     <!-- and to enable framework-specific samples (e.g., Guid.CreateVersion7 on net9.0+) -->
-    <TargetFrameworks>net6.0;net8.0;net9.0</TargetFrameworks>
+    <TargetFrameworks>net6.0;net7.0;net8.0;net9.0;net10.0</TargetFrameworks>
     <OutputType>Library</OutputType>
     <!-- Sample project intentionally contains patterns that trigger analyzer warnings -->
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
