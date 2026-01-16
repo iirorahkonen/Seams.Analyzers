@@ -7,30 +7,38 @@ A Roslyn analyzer library that detects code patterns blocking "seams" in legacy 
 
 ## Use Cases
 
-### 1. Legacy Code Refactoring
+### 1. AI-Assisted Development
 
-When working with legacy code, this analyzer helps you identify where to create seams so you can test a class. By detecting the 18 anti-patterns that block testability, you can systematically refactor code to introduce dependency injection points, extract interfaces, and break hard dependencies—making previously untestable code testable.
+When SEAM rules are configured as warnings or errors, AI coding assistants (GitHub Copilot, Claude, Cursor, Windsurf, etc.) read build failures and adapt their code generation to avoid untestable patterns.
 
-### 2. AI-Assisted Development (Modern)
+#### How It Works
 
-**This is the game-changer for modern development workflows.**
+```
+Developer Request → AI Generation → Analyzer Feedback → AI Iteration → Testable Code
+```
 
-When you enable these analyzers as warnings or errors in your build, AI coding assistants (like GitHub Copilot, Claude, Cursor, etc.) will automatically avoid generating untestable patterns. The AI sees the build failures and adapts its code generation to produce testable, well-architected code from the start.
+1. AI generates code with a hard dependency (e.g., `new EmailService()`)
+2. Build fails with `SEAM001: Direct instantiation of concrete type 'EmailService'`
+3. AI reads this feedback and regenerates using dependency injection
+4. Resulting code is testable from the start
+
+| Traditional Workflow | With Analyzers |
+|----------------------|----------------|
+| Write code → Analyze → Refactor | Configure rules → AI generates → Testable code |
+| Fix problems after creation | Prevent problems during generation |
+
+#### Setup
 
 ```xml
-<!-- In your .editorconfig or Directory.Build.props -->
+<!-- Directory.Build.props - enforce as errors -->
 <PropertyGroup>
   <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 </PropertyGroup>
 ```
 
-This creates a **guardrail effect**: instead of the AI generating code with hard dependencies that you'll need to refactor later, it diverges to patterns that are testable by design—dependency injection, interface abstractions, and proper separation of concerns.
+### 2. Legacy Code Refactoring
 
-**Why this matters:**
-- AI coding assistants read compiler output and adjust their suggestions
-- Build failures from SEAM rules guide AI toward better patterns
-- You get testable code from the first generation, not after painful refactoring
-- The analyzer becomes a "teaching tool" for AI assistants about your architecture standards
+When working with legacy code, this analyzer helps you identify where to create seams so you can test a class. By detecting the 18 anti-patterns that block testability, you can systematically refactor code to introduce dependency injection points, extract interfaces, and break hard dependencies—making previously untestable code testable.
 
 ## What are Seams?
 
@@ -103,6 +111,12 @@ dotnet_code_quality.SEAM001.excluded_types = T:MyNamespace.AllowedFactory
 
 # Exclude specific methods from SEAM004
 dotnet_code_quality.SEAM004.excluded_methods = M:System.Console.WriteLine
+
+# Exclude namespaces from SEAM009
+dotnet_code_quality.SEAM009.excluded_namespaces = MyNamespace.Internal
+
+# Set complexity threshold for SEAM011 (default: 50)
+dotnet_code_quality.SEAM011.complexity_threshold = 100
 ```
 
 ## Example
