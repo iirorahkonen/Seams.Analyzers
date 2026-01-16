@@ -92,6 +92,25 @@ dotnet_code_quality.SEAM004.excluded_methods = M:System.Console.WriteLine
 6. Add documentation in `docs/rules/SEAMxxx.md`
 7. Update `AnalyzerReleases.Unshipped.md`
 
+## Analyzer Release Tracking
+
+The project uses two files to track diagnostic rule changes for releases:
+
+| File | When to Update |
+|------|----------------|
+| `AnalyzerReleases.Unshipped.md` | When adding, modifying, or removing diagnostic rules |
+| `AnalyzerReleases.Shipped.md` | At release time only |
+
+**Adding/Modifying Rules (Unshipped.md):**
+- Add new rules to the `### New Rules` table
+- Format: `Rule ID | Category | Severity | Notes`
+- Severity should be `Info`, `Warning`, `Error`, or `Disabled`
+
+**At Release Time:**
+1. Move content from `Unshipped.md` to `Shipped.md`
+2. Add a version header: `## Release X.Y.Z`
+3. Clear `Unshipped.md` (keep only the header comments)
+
 ## Code Style
 
 - All analyzers must be `sealed`
