@@ -1,4 +1,4 @@
-mode: ManualDeployment
+mode: ContinuousDeployment
 next-version: 0.1.0
 assembly-versioning-scheme: MajorMinorPatch
 assembly-file-versioning-scheme: MajorMinorPatchTag
@@ -7,7 +7,7 @@ tag-prefix: '[vV]?'
 branches:
   main:
     regex: ^main$
-    mode: ManualDeployment
+    mode: ContinuousDeployment
     label: ''
     increment: Patch
     source-branches:
