@@ -41,8 +41,9 @@ public sealed class GuidNewGuidAnalyzer : DiagnosticAnalyzer
 
         var fullTypeName = containingType.ToDisplayString();
 
-        // Check for Guid.NewGuid()
-        if (fullTypeName == "System.Guid" && methodSymbol.Name == "NewGuid")
+        // Check for Guid.NewGuid() and Guid.CreateVersion7() (.NET 9+)
+        if (fullTypeName == "System.Guid" &&
+            methodSymbol.Name is "NewGuid" or "CreateVersion7" or "CreateVersion8")
         {
             var diagnostic = Diagnostic.Create(
                 DiagnosticDescriptors.GuidNewGuid,

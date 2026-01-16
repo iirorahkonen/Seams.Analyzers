@@ -115,74 +115,14 @@ public sealed class ServiceLocatorAnalyzer : DiagnosticAnalyzer
         }
 
         // Check if we're in a composition root context (Startup, Program, ConfigureServices, etc.)
-        if (IsInCompositionRoot(context.Node))
+        if (context.Node.IsInCompositionRoot())
             return false;
 
         // Check if it's a factory delegate or Func<IServiceProvider, T> pattern
-        if (IsInFactoryDelegate(context.Node))
+        if (context.Node.IsInFactoryDelegate())
             return false;
 
         return true;
-    }
-
-    private static bool IsInCompositionRoot(SyntaxNode node)
-    {
-        var current = node.Parent;
-        while (current != null)
-        {
-            if (current is ClassDeclarationSyntax classDecl)
-            {
-                var className = classDecl.Identifier.Text;
-                if (className is "Startup" or "Program" or "CompositionRoot" or
-                    "ServiceCollectionExtensions" or "DependencyInjectionExtensions")
-                {
-                    return true;
-                }
-            }
-            else if (current is MethodDeclarationSyntax methodDecl)
-            {
-                var methodName = methodDecl.Identifier.Text;
-                if (methodName is "ConfigureServices" or "AddServices" or "RegisterServices" or
-                    "Configure" or "ConfigureContainer")
-                {
-                    return true;
-                }
-            }
-
-            current = current.Parent;
-        }
-
-        return false;
-    }
-
-    private static bool IsInFactoryDelegate(SyntaxNode node)
-    {
-        var current = node.Parent;
-        while (current != null)
-        {
-            // Check if we're inside a lambda or anonymous method
-            if (current is LambdaExpressionSyntax || current is AnonymousMethodExpressionSyntax)
-            {
-                // Check if the lambda is an argument to AddSingleton, AddScoped, etc.
-                if (current.Parent is ArgumentSyntax arg && arg.Parent is ArgumentListSyntax argList)
-                {
-                    if (argList.Parent is InvocationExpressionSyntax invocation &&
-                        invocation.Expression is MemberAccessExpressionSyntax memberAccess)
-                    {
-                        var methodName = memberAccess.Name.Identifier.Text;
-                        if (methodName.StartsWith("Add", System.StringComparison.Ordinal) ||
-                            methodName is "Register" or "RegisterType" or "RegisterInstance")
-                        {
-                            return true;
-                        }
-                    }
-                }
-            }
-
-            current = current.Parent;
-        }
-
-        return false;
     }
 
     private static void ReportDiagnostic(SyntaxNodeAnalysisContext context, InvocationExpressionSyntax invocation)

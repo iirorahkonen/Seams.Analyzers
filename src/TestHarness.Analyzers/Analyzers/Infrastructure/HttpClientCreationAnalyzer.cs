@@ -56,11 +56,11 @@ public sealed class HttpClientCreationAnalyzer : DiagnosticAnalyzer
             return;
 
         // Skip if in a factory method or HttpClientFactory context
-        if (IsInHttpClientFactoryContext(creationExpression))
+        if (creationExpression.IsInHttpClientFactoryContext())
             return;
 
         // Skip if it's a static readonly field (sometimes acceptable for simple cases)
-        if (IsStaticReadonlyFieldInitializer(creationExpression))
+        if (creationExpression.IsInStaticReadonlyFieldInitializer())
             return;
 
         var diagnostic = Diagnostic.Create(
@@ -68,60 +68,5 @@ public sealed class HttpClientCreationAnalyzer : DiagnosticAnalyzer
             creationExpression.GetLocation());
 
         context.ReportDiagnostic(diagnostic);
-    }
-
-    private static bool IsInHttpClientFactoryContext(SyntaxNode node)
-    {
-        var current = node.Parent;
-        while (current != null)
-        {
-            // Check if we're in a class that implements IHttpClientFactory
-            if (current is ClassDeclarationSyntax classDecl)
-            {
-                var className = classDecl.Identifier.Text;
-                if (className.Contains("Factory") || className.Contains("HttpClient"))
-                {
-                    return true;
-                }
-            }
-
-            // Check if we're in a method that creates HttpClient for factory purposes
-            if (current is MethodDeclarationSyntax methodDecl)
-            {
-                var methodName = methodDecl.Identifier.Text;
-                if (methodName is "CreateClient" or "CreateHttpClient" or "Build")
-                {
-                    return true;
-                }
-            }
-
-            current = current.Parent;
-        }
-
-        return false;
-    }
-
-    private static bool IsStaticReadonlyFieldInitializer(SyntaxNode node)
-    {
-        var current = node.Parent;
-        while (current != null)
-        {
-            if (current is FieldDeclarationSyntax field)
-            {
-                return field.Modifiers.Any(SyntaxKind.StaticKeyword) &&
-                       field.Modifiers.Any(SyntaxKind.ReadOnlyKeyword);
-            }
-
-            if (current is MethodDeclarationSyntax ||
-                current is ConstructorDeclarationSyntax ||
-                current is PropertyDeclarationSyntax)
-            {
-                return false;
-            }
-
-            current = current.Parent;
-        }
-
-        return false;
     }
 }

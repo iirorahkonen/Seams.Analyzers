@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.Testing;
 using TestHarness.Analyzers.Analyzers.DirectDependencies;
 using TestHarness.Analyzers.Tests.Verifiers;
 using Xunit;

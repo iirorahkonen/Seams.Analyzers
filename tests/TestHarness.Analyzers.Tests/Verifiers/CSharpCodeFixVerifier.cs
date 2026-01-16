@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
@@ -53,7 +54,10 @@ public static class CSharpCodeFixVerifier<TAnalyzer, TCodeFix>
     {
         public Test()
         {
-            ReferenceAssemblies = ReferenceAssemblies.Net.Net80;
+            // Add references to common assemblies including additional packages for testing
+            ReferenceAssemblies = ReferenceAssemblies.Net.Net80
+                .AddPackages(ImmutableArray.Create(
+                    new PackageIdentity("System.Data.SqlClient", "4.8.6")));
         }
 
         protected override ParseOptions CreateParseOptions()

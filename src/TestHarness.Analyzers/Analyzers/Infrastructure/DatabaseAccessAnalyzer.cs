@@ -69,7 +69,7 @@ public sealed class DatabaseAccessAnalyzer : DiagnosticAnalyzer
             return;
 
         // Skip if in a repository or data access class
-        if (IsInDataAccessContext(creationExpression))
+        if (creationExpression.IsInDataAccessContext())
             return;
 
         var diagnostic = Diagnostic.Create(
@@ -100,31 +100,6 @@ public sealed class DatabaseAccessAnalyzer : DiagnosticAnalyzer
         {
             if (iface.ToDisplayString() == "System.Data.IDbConnection")
                 return true;
-        }
-
-        return false;
-    }
-
-    private static bool IsInDataAccessContext(SyntaxNode node)
-    {
-        var current = node.Parent;
-        while (current != null)
-        {
-            if (current is ClassDeclarationSyntax classDecl)
-            {
-                var className = classDecl.Identifier.Text;
-                // Allow in repository classes, data access classes, or connection factories
-                if (className.EndsWith("Repository", System.StringComparison.Ordinal) ||
-                    className.EndsWith("DataAccess", System.StringComparison.Ordinal) ||
-                    className.Contains("DbContext") ||
-                    className.Contains("ConnectionFactory") ||
-                    className.Contains("ConnectionPool"))
-                {
-                    return true;
-                }
-            }
-
-            current = current.Parent;
         }
 
         return false;

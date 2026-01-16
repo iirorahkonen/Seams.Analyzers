@@ -25,43 +25,65 @@ Install-Package TestHarness.Analyzers
 
 ## Diagnostic Rules
 
+### Default Severity Levels
+
+Not all rules are enabled by default. This follows the **Principle of Least Astonishment (POLA)** - rules that may produce many warnings in typical codebases are disabled by default to avoid overwhelming users on first installation.
+
+| Severity | Meaning | Rules |
+|----------|---------|-------|
+| **Warning** | Enabled, likely issues | SEAM003, SEAM012, SEAM013, SEAM014, SEAM016 |
+| **Info** | Enabled, suggestions | SEAM001, SEAM005, SEAM006, SEAM007, SEAM015, SEAM017, SEAM018 |
+| **Disabled** | Opt-in only | SEAM002, SEAM004, SEAM008, SEAM009, SEAM010, SEAM011 |
+
+To enable disabled rules, add to your `.editorconfig`:
+
+```ini
+# Enable specific disabled rules
+dotnet_diagnostic.SEAM002.severity = suggestion
+dotnet_diagnostic.SEAM004.severity = suggestion
+dotnet_diagnostic.SEAM008.severity = suggestion
+dotnet_diagnostic.SEAM009.severity = suggestion
+dotnet_diagnostic.SEAM010.severity = suggestion
+dotnet_diagnostic.SEAM011.severity = suggestion
+```
+
 ### Direct Dependencies
-| Rule | Description |
-|------|-------------|
-| [SEAM001](docs/rules/SEAM001.md) | Direct instantiation of concrete types |
-| [SEAM002](docs/rules/SEAM002.md) | Concrete type parameters without abstraction |
-| [SEAM003](docs/rules/SEAM003.md) | Factory method returns concrete type |
+| Rule | Description | Default |
+|------|-------------|---------|
+| [SEAM001](docs/rules/SEAM001.md) | Direct instantiation of concrete types | Info |
+| [SEAM002](docs/rules/SEAM002.md) | Concrete type in constructor parameter | **Disabled** |
+| [SEAM003](docs/rules/SEAM003.md) | Service locator pattern usage | Warning |
 
 ### Static Dependencies
-| Rule | Description |
-|------|-------------|
-| [SEAM004](docs/rules/SEAM004.md) | Static method calls |
-| [SEAM005](docs/rules/SEAM005.md) | Static property access |
-| [SEAM006](docs/rules/SEAM006.md) | Extension method dependency |
-| [SEAM007](docs/rules/SEAM007.md) | Static event subscription |
-| [SEAM008](docs/rules/SEAM008.md) | Ambient context usage |
+| Rule | Description | Default |
+|------|-------------|---------|
+| [SEAM004](docs/rules/SEAM004.md) | Static method calls (File, Console, etc.) | **Disabled** |
+| [SEAM005](docs/rules/SEAM005.md) | DateTime.Now/UtcNow usage | Info |
+| [SEAM006](docs/rules/SEAM006.md) | Guid.NewGuid() usage | Info |
+| [SEAM007](docs/rules/SEAM007.md) | Environment.GetEnvironmentVariable | Info |
+| [SEAM008](docs/rules/SEAM008.md) | Static property access (ConfigurationManager) | **Disabled** |
 
 ### Inheritance Blockers
-| Rule | Description |
-|------|-------------|
-| [SEAM009](docs/rules/SEAM009.md) | Sealed class prevents inheritance |
-| [SEAM010](docs/rules/SEAM010.md) | Non-virtual method prevents override |
-| [SEAM011](docs/rules/SEAM011.md) | Private method contains logic |
+| Rule | Description | Default |
+|------|-------------|---------|
+| [SEAM009](docs/rules/SEAM009.md) | Sealed class prevents inheritance | **Disabled** |
+| [SEAM010](docs/rules/SEAM010.md) | Non-virtual method prevents override | **Disabled** |
+| [SEAM011](docs/rules/SEAM011.md) | Complex private method (50+ lines) | **Disabled** |
 
 ### Global State
-| Rule | Description |
-|------|-------------|
-| [SEAM012](docs/rules/SEAM012.md) | Singleton pattern usage |
-| [SEAM013](docs/rules/SEAM013.md) | Static mutable field |
-| [SEAM014](docs/rules/SEAM014.md) | Service locator pattern |
+| Rule | Description | Default |
+|------|-------------|---------|
+| [SEAM012](docs/rules/SEAM012.md) | Singleton pattern implementation | Warning |
+| [SEAM013](docs/rules/SEAM013.md) | Static mutable field | Warning |
+| [SEAM014](docs/rules/SEAM014.md) | Ambient context (HttpContext.Current, etc.) | Warning |
 
 ### Infrastructure Dependencies
-| Rule | Description |
-|------|-------------|
-| [SEAM015](docs/rules/SEAM015.md) | Direct file system access |
-| [SEAM016](docs/rules/SEAM016.md) | Direct HTTP client usage |
-| [SEAM017](docs/rules/SEAM017.md) | Direct database access |
-| [SEAM018](docs/rules/SEAM018.md) | Direct process invocation |
+| Rule | Description | Default |
+|------|-------------|---------|
+| [SEAM015](docs/rules/SEAM015.md) | Direct file system access | Info |
+| [SEAM016](docs/rules/SEAM016.md) | Direct HttpClient creation | Warning |
+| [SEAM017](docs/rules/SEAM017.md) | Direct database connection creation | Info |
+| [SEAM018](docs/rules/SEAM018.md) | Direct Process.Start usage | Info |
 
 ## Configuration
 
