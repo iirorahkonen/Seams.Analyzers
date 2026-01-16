@@ -1,11 +1,11 @@
-# Contributing to TestHarness.Analyzers
+# Contributing to Seams.Analyzers
 
 Thank you for your interest in contributing! This document provides guidelines and instructions for contributing.
 
 ## Getting Started
 
 1. Fork the repository
-2. Clone your fork: `git clone https://github.com/YOUR-USERNAME/TestHarness.Analyzers.git`
+2. Clone your fork: `git clone https://github.com/YOUR-USERNAME/Seams.Analyzers.git`
 3. Create a feature branch: `git checkout -b feature/your-feature-name`
 4. Make your changes
 5. Run tests: `dotnet test`
@@ -39,13 +39,13 @@ dotnet test --filter "FullyQualifiedName~YourTestName"
 
 ## Adding a New Analyzer
 
-1. Add diagnostic ID constant to `src/TestHarness.Analyzers/DiagnosticIds.cs`
-2. Add diagnostic descriptor to `src/TestHarness.Analyzers/DiagnosticDescriptors.cs`
-3. Create analyzer class in appropriate `src/TestHarness.Analyzers/Analyzers/` subfolder
-4. Create code fix in parallel `src/TestHarness.Analyzers/CodeFixes/` subfolder (optional)
-5. Add tests in `tests/TestHarness.Analyzers.Tests/AnalyzerTests/`
+1. Add diagnostic ID constant to `src/Seams.Analyzers/DiagnosticIds.cs`
+2. Add diagnostic descriptor to `src/Seams.Analyzers/DiagnosticDescriptors.cs`
+3. Create analyzer class in appropriate `src/Seams.Analyzers/Analyzers/` subfolder
+4. Create code fix in parallel `src/Seams.Analyzers/CodeFixes/` subfolder (optional)
+5. Add tests in `tests/Seams.Analyzers.Tests/AnalyzerTests/`
 6. Add documentation in `docs/rules/SEAMxxx.md`
-7. Update `src/TestHarness.Analyzers/AnalyzerReleases.Unshipped.md`
+7. Update `src/Seams.Analyzers/AnalyzerReleases.Unshipped.md`
 
 ## Code Style
 

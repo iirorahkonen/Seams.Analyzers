@@ -8,7 +8,7 @@
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability in TestHarness.Analyzers, please report it responsibly:
+If you discover a security vulnerability in Seams.Analyzers, please report it responsibly:
 
 1. **Do not** open a public issue
 2. Email the maintainer directly or use GitHub's private vulnerability reporting feature
@@ -28,7 +28,7 @@ If you discover a security vulnerability in TestHarness.Analyzers, please report
 
 This security policy applies to:
 
-- The TestHarness.Analyzers NuGet package
+- The Seams.Analyzers NuGet package
 - The source code in this repository
 
 Since this is a Roslyn analyzer that runs at compile-time, security concerns are limited, but we take all reports seriously.

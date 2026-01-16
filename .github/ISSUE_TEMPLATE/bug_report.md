@@ -30,7 +30,7 @@ What does the analyzer actually do?
 
 ## Environment
 
-- TestHarness.Analyzers version:
+- Seams.Analyzers version:
 - .NET SDK version:
 - IDE: (Visual Studio / Rider / VS Code)
 

@@ -28,5 +28,5 @@ Fixes #(issue number)
 - [ ] Added diagnostic ID to `DiagnosticIds.cs`
 - [ ] Added descriptor to `DiagnosticDescriptors.cs`
 - [ ] Created analyzer in appropriate `Analyzers/` subfolder
-- [ ] Added tests in `tests/TestHarness.Analyzers.Tests/`
+- [ ] Added tests in `tests/Seams.Analyzers.Tests/`
 - [ ] Added documentation in `docs/rules/`

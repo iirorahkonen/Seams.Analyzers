@@ -1,7 +1,7 @@
-# TestHarness.Analyzers
+# Seams.Analyzers
 
-[![CI](https://github.com/iirorahkonen/TestHarness.Analyzers/actions/workflows/ci.yml/badge.svg)](https://github.com/iirorahkonen/TestHarness.Analyzers/actions/workflows/ci.yml)
-[![NuGet](https://img.shields.io/nuget/v/TestHarness.Analyzers.svg)](https://www.nuget.org/packages/TestHarness.Analyzers/)
+[![CI](https://github.com/iirorahkonen/Seams.Analyzers/actions/workflows/ci.yml/badge.svg)](https://github.com/iirorahkonen/Seams.Analyzers/actions/workflows/ci.yml)
+[![NuGet](https://img.shields.io/nuget/v/Seams.Analyzers.svg)](https://www.nuget.org/packages/Seams.Analyzers/)
 
 A Roslyn analyzer library that detects code patterns blocking "seams" in legacy code, based on Michael Feathers' [Working Effectively with Legacy Code](https://www.oreilly.com/library/view/working-effectively-with/0131177052/).
 
@@ -49,13 +49,13 @@ This analyzer identifies 18 anti-patterns (SEAM001-SEAM018) across 5 categories 
 ## Installation
 
 ```bash
-dotnet add package TestHarness.Analyzers
+dotnet add package Seams.Analyzers
 ```
 
 Or via Package Manager:
 
 ```powershell
-Install-Package TestHarness.Analyzers
+Install-Package Seams.Analyzers
 ```
 
 ## Diagnostic Rules

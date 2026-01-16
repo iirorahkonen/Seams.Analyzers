@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-TestHarness.Analyzers is a Roslyn analyzer library that detects code patterns blocking "seams" in legacy code, based on Michael Feathers' "Working Effectively with Legacy Code." It identifies 18 anti-patterns (SEAM001-SEAM018) across 5 categories that hinder testability.
+Seams.Analyzers is a Roslyn analyzer library that detects code patterns blocking "seams" in legacy code, based on Michael Feathers' "Working Effectively with Legacy Code." It identifies 18 anti-patterns (SEAM001-SEAM018) across 5 categories that hinder testability.
 
 ## Build and Test Commands
 
@@ -22,21 +22,21 @@ dotnet test --filter "FullyQualifiedName~DirectInstantiationAnalyzerTests.Direct
 dotnet test --collect:"XPlat Code Coverage"
 
 # Pack the analyzer as NuGet package
-dotnet pack src/TestHarness.Analyzers/TestHarness.Analyzers.csproj
+dotnet pack src/Seams.Analyzers/Seams.Analyzers.csproj
 ```
 
 ## Architecture
 
 ### Project Structure
-- `src/TestHarness.Analyzers/` - Main analyzer library (netstandard2.0 for compatibility)
+- `src/Seams.Analyzers/` - Main analyzer library (netstandard2.0 for compatibility)
   - `Analyzers/` - Diagnostic implementations organized by category
   - `CodeFixes/` - Code fix providers (parallel structure to Analyzers)
   - `DiagnosticIds.cs` - All rule ID constants
   - `DiagnosticDescriptors.cs` - Rule definitions with metadata
   - `AnalyzerConfigOptions.cs` - EditorConfig support for exclusions
-- `tests/TestHarness.Analyzers.Tests/` - xUnit tests (net8.0)
+- `tests/Seams.Analyzers.Tests/` - xUnit tests (net8.0)
   - `Verifiers/` - Test infrastructure wrapping Microsoft's analyzer testing framework
-- `tests/TestHarness.Analyzers.Samples/` - Sample code demonstrating violations
+- `tests/Seams.Analyzers.Samples/` - Sample code demonstrating violations
 - `docs/rules/` - Markdown documentation for each rule
 
 ### Diagnostic Categories
@@ -88,7 +88,7 @@ dotnet_code_quality.SEAM004.excluded_methods = M:System.Console.WriteLine
 2. Add diagnostic descriptor to `DiagnosticDescriptors.cs`
 3. Create analyzer class in appropriate `Analyzers/` subfolder
 4. Create code fix in parallel `CodeFixes/` subfolder (optional)
-5. Add tests in `tests/TestHarness.Analyzers.Tests/AnalyzerTests/`
+5. Add tests in `tests/Seams.Analyzers.Tests/AnalyzerTests/`
 6. Add documentation in `docs/rules/SEAMxxx.md`
 7. Update `AnalyzerReleases.Unshipped.md`
 

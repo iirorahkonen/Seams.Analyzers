@@ -8,6 +8,10 @@ on:
     branches:
       - main
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -49,7 +53,7 @@ jobs:
 
       - name: Pack
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: dotnet pack src/TestHarness.Analyzers/TestHarness.Analyzers.csproj --no-build --configuration Release /p:PackageVersion=${{ steps.gitversion.outputs.fullSemVer }} --output ./artifacts
+        run: dotnet pack src/Seams.Analyzers/Seams.Analyzers.csproj --no-build --configuration Release /p:PackageVersion=${{ steps.gitversion.outputs.fullSemVer }} --output ./artifacts
 
       - name: Upload NuGet Package
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
