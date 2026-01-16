@@ -58,3 +58,6 @@ Desktop.ini
 *.tmp
 *.temp
 *.log
+
+# Git worktrees
+.worktrees/
