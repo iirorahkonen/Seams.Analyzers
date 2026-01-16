@@ -31,6 +31,8 @@ jobs:
           filters: |
             src:
               - 'src/Seams.Analyzers/**'
+              - '.github/workflows/ci.yml'
+              - 'GitVersion.yml'
 
       - name: Install GitVersion
         uses: gittools/actions/gitversion/setup@v4
