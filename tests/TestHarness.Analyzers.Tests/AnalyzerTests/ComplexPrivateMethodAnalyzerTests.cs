@@ -84,22 +84,20 @@ public class ComplexPrivateMethodAnalyzerTests
         var lines = new System.Text.StringBuilder();
         for (int i = 1; i <= 55; i++)
         {
-            lines.AppendLine($"            var line{i} = {i};");
+            lines.AppendLine($"        var line{i} = {i};");
         }
 
-        var source = $$"""
-            public class OrderProcessor
-            {
-                void {|#0:ProcessItem|}()
-                {
-{{lines}}        }
-            }
-            """;
+        var source = $@"public class OrderProcessor
+{{
+    void {{|#0:ProcessItem|}}()
+    {{
+{lines}    }}
+}}";
 
         var expected = CSharpAnalyzerVerifier<ComplexPrivateMethodAnalyzer>
             .Diagnostic("SEAM011")
             .WithLocation(0)
-            .WithArguments("ProcessItem", 59);
+            .WithArguments("ProcessItem", 58);
 
         await CSharpAnalyzerVerifier<ComplexPrivateMethodAnalyzer>.VerifyAnalyzerAsync(source, expected);
     }
@@ -110,22 +108,20 @@ public class ComplexPrivateMethodAnalyzerTests
         var lines = new System.Text.StringBuilder();
         for (int i = 1; i <= 55; i++)
         {
-            lines.AppendLine($"            var line{i} = {i};");
+            lines.AppendLine($"        var line{i} = {i};");
         }
 
-        var source = $$"""
-            public class OrderProcessor
-            {
-                private void {|#0:ProcessItem|}()
-                {
-{{lines}}        }
-            }
-            """;
+        var source = $@"public class OrderProcessor
+{{
+    private void {{|#0:ProcessItem|}}()
+    {{
+{lines}    }}
+}}";
 
         var expected = CSharpAnalyzerVerifier<ComplexPrivateMethodAnalyzer>
             .Diagnostic("SEAM011")
             .WithLocation(0)
-            .WithArguments("ProcessItem", 59);
+            .WithArguments("ProcessItem", 58);
 
         await CSharpAnalyzerVerifier<ComplexPrivateMethodAnalyzer>.VerifyAnalyzerAsync(source, expected);
     }
