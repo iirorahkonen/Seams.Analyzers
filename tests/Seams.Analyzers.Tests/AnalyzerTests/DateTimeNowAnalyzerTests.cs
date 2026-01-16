@@ -135,4 +135,75 @@ public class DateTimeNowAnalyzerTests
 
         await CSharpAnalyzerVerifier<DateTimeNowAnalyzer>.VerifyAnalyzerAsync(source);
     }
+
+    [Fact]
+    public async Task TimeProviderSystemGetUtcNow_ShouldReportDiagnostic()
+    {
+        const string source = """
+            using System;
+
+            public class AuditLogger
+            {
+                public void Log(string message)
+                {
+                    var timestamp = {|#0:TimeProvider.System.GetUtcNow()|};
+                }
+            }
+            """;
+
+        var expected = CSharpAnalyzerVerifier<DateTimeNowAnalyzer>
+            .Diagnostic(DiagnosticIds.DateTimeNow)
+            .WithLocation(0)
+            .WithArguments("TimeProvider.System.GetUtcNow()");
+
+        await CSharpAnalyzerVerifier<DateTimeNowAnalyzer>.VerifyAnalyzerAsync(source, expected);
+    }
+
+    [Fact]
+    public async Task TimeProviderSystemGetLocalNow_ShouldReportDiagnostic()
+    {
+        const string source = """
+            using System;
+
+            public class AuditLogger
+            {
+                public void Log(string message)
+                {
+                    var timestamp = {|#0:TimeProvider.System.GetLocalNow()|};
+                }
+            }
+            """;
+
+        var expected = CSharpAnalyzerVerifier<DateTimeNowAnalyzer>
+            .Diagnostic(DiagnosticIds.DateTimeNow)
+            .WithLocation(0)
+            .WithArguments("TimeProvider.System.GetLocalNow()");
+
+        await CSharpAnalyzerVerifier<DateTimeNowAnalyzer>.VerifyAnalyzerAsync(source, expected);
+    }
+
+    [Fact]
+    public async Task InjectedTimeProviderGetUtcNow_ShouldNotReportDiagnostic()
+    {
+        const string source = """
+            using System;
+
+            public class AuditLogger
+            {
+                private readonly TimeProvider _timeProvider;
+
+                public AuditLogger(TimeProvider timeProvider)
+                {
+                    _timeProvider = timeProvider;
+                }
+
+                public void Log(string message)
+                {
+                    var timestamp = _timeProvider.GetUtcNow();
+                }
+            }
+            """;
+
+        await CSharpAnalyzerVerifier<DateTimeNowAnalyzer>.VerifyAnalyzerAsync(source);
+    }
 }

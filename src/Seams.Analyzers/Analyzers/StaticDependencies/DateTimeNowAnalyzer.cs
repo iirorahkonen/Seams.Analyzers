@@ -7,7 +7,8 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace Seams.Analyzers.Analyzers.StaticDependencies;
 
 /// <summary>
-/// Analyzer that detects usage of DateTime.Now, DateTime.UtcNow, DateTimeOffset.Now, and DateTimeOffset.UtcNow.
+/// Analyzer that detects usage of DateTime.Now, DateTime.UtcNow, DateTimeOffset.Now, DateTimeOffset.UtcNow,
+/// and TimeProvider.System.GetUtcNow()/GetLocalNow().
 /// These create non-deterministic dependencies that make testing difficult.
 /// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
@@ -22,6 +23,7 @@ public sealed class DateTimeNowAnalyzer : DiagnosticAnalyzer
         context.EnableConcurrentExecution();
 
         context.RegisterSyntaxNodeAction(AnalyzeMemberAccess, SyntaxKind.SimpleMemberAccessExpression);
+        context.RegisterSyntaxNodeAction(AnalyzeInvocation, SyntaxKind.InvocationExpression);
     }
 
     private static void AnalyzeMemberAccess(SyntaxNodeAnalysisContext context)
@@ -62,6 +64,41 @@ public sealed class DateTimeNowAnalyzer : DiagnosticAnalyzer
         }
     }
 
+    private static void AnalyzeInvocation(SyntaxNodeAnalysisContext context)
+    {
+        var invocation = (InvocationExpressionSyntax)context.Node;
+
+        // Check if the invocation is a method call on TimeProvider.System
+        if (invocation.Expression is not MemberAccessExpressionSyntax memberAccess)
+            return;
+
+        var symbolInfo = context.SemanticModel.GetSymbolInfo(invocation, context.CancellationToken);
+        if (symbolInfo.Symbol is not IMethodSymbol methodSymbol)
+            return;
+
+        // Check if this is a call to GetUtcNow or GetLocalNow on TimeProvider
+        var containingType = methodSymbol.ContainingType;
+        if (containingType == null)
+            return;
+
+        var fullTypeName = containingType.ToDisplayString();
+
+        // Check for TimeProvider.GetUtcNow() and TimeProvider.GetLocalNow()
+        if (fullTypeName == "System.TimeProvider" &&
+            methodSymbol.Name is "GetUtcNow" or "GetLocalNow")
+        {
+            // Verify this is called on TimeProvider.System (static property access)
+            if (memberAccess.Expression is MemberAccessExpressionSyntax systemAccess)
+            {
+                var systemSymbolInfo = context.SemanticModel.GetSymbolInfo(systemAccess, context.CancellationToken);
+                if (systemSymbolInfo.Symbol is IPropertySymbol { IsStatic: true, Name: "System" })
+                {
+                    ReportDiagnosticForInvocation(context, invocation, $"TimeProvider.System.{methodSymbol.Name}()");
+                }
+            }
+        }
+    }
+
     private static void ReportDiagnostic(
         SyntaxNodeAnalysisContext context,
         MemberAccessExpressionSyntax memberAccess,
@@ -70,6 +107,19 @@ public sealed class DateTimeNowAnalyzer : DiagnosticAnalyzer
         var diagnostic = Diagnostic.Create(
             DiagnosticDescriptors.DateTimeNow,
             memberAccess.GetLocation(),
+            accessedMember);
+
+        context.ReportDiagnostic(diagnostic);
+    }
+
+    private static void ReportDiagnosticForInvocation(
+        SyntaxNodeAnalysisContext context,
+        InvocationExpressionSyntax invocation,
+        string accessedMember)
+    {
+        var diagnostic = Diagnostic.Create(
+            DiagnosticDescriptors.DateTimeNow,
+            invocation.GetLocation(),
             accessedMember);
 
         context.ReportDiagnostic(diagnostic);

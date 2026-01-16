@@ -33,4 +33,7 @@ public static class DiagnosticIds
     public const string HttpClientCreation = "SEAM016";
     public const string DatabaseAccess = "SEAM017";
     public const string ProcessStart = "SEAM018";
+
+    // Category F: Non-Deterministic Dependencies
+    public const string RandomShared = "SEAM019";
 }

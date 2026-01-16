@@ -47,6 +47,13 @@ public class AuditLogger
         var utc = TimeProvider.System.GetUtcNow();
         Console.WriteLine($"[{utc}] {message}");
     }
+
+    public void LogWithLocalTime(string message)
+    {
+        // SEAM005: TimeProvider.System.GetLocalNow() also creates non-deterministic dependency
+        var local = TimeProvider.System.GetLocalNow();
+        Console.WriteLine($"[{local}] {message}");
+    }
 #endif
 }
 
@@ -82,6 +89,33 @@ public class EntityFactory
     }
 #endif
 }
+
+// SEAM019 - Random.Shared
+// These examples show usage of Random.Shared that creates non-deterministic behavior
+
+#if NET6_0_OR_GREATER
+public class RandomService
+{
+    public int GetRandomNumber()
+    {
+        // SEAM019: Random.Shared creates non-deterministic dependency
+        // Note: Random.Shared was added in .NET 6 - prefer injecting Random instead
+        return Random.Shared.Next();
+    }
+
+    public int GetRandomNumberInRange(int min, int max)
+    {
+        // SEAM019: Random.Shared.Next with range also creates non-deterministic dependency
+        return Random.Shared.Next(min, max);
+    }
+
+    public double GetRandomDouble()
+    {
+        // SEAM019: Random.Shared.NextDouble creates non-deterministic dependency
+        return Random.Shared.NextDouble();
+    }
+}
+#endif
 
 // SEAM007 - Environment Variables
 // These examples show direct access to environment variables

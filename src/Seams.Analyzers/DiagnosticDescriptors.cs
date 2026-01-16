@@ -205,4 +205,16 @@ public static class DiagnosticDescriptors
         isEnabledByDefault: true,
         description: "Calling Process.Start directly creates a dependency on external processes and system state. Consider injecting an IProcessRunner abstraction.",
         helpLinkUri: HelpLinkBase + "SEAM018.md");
+
+    // Category F: Non-Deterministic Dependencies
+
+    public static readonly DiagnosticDescriptor RandomShared = new(
+        DiagnosticIds.RandomShared,
+        title: "Random.Shared creates non-deterministic dependency",
+        messageFormat: "Random.Shared creates non-deterministic behavior that makes testing difficult",
+        category: StaticDependenciesCategory,
+        defaultSeverity: DiagnosticSeverity.Info,
+        isEnabledByDefault: true,
+        description: "Using Random.Shared directly makes code non-deterministic and hard to test. Consider injecting a Random instance or using a seeded Random for predictable test behavior.",
+        helpLinkUri: HelpLinkBase + "SEAM019.md");
 }
