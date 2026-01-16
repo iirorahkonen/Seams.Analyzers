@@ -1,0 +1,68 @@
+using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Testing;
+using TestHarness.Analyzers.Analyzers.StaticDependencies;
+using TestHarness.Analyzers.Tests.Verifiers;
+using Xunit;
+
+namespace TestHarness.Analyzers.Tests.AnalyzerTests;
+
+public class GuidNewGuidAnalyzerTests
+{
+    [Fact]
+    public async Task GuidNewGuid_ShouldReportDiagnostic()
+    {
+        const string source = """
+            using System;
+
+            public class EntityFactory
+            {
+                public Guid Create()
+                {
+                    return {|#0:Guid.NewGuid()|};
+                }
+            }
+            """;
+
+        var expected = CSharpAnalyzerVerifier<GuidNewGuidAnalyzer>
+            .Diagnostic(DiagnosticIds.GuidNewGuid)
+            .WithLocation(0);
+
+        await CSharpAnalyzerVerifier<GuidNewGuidAnalyzer>.VerifyAnalyzerAsync(source, expected);
+    }
+
+    [Fact]
+    public async Task GuidParse_ShouldNotReportDiagnostic()
+    {
+        const string source = """
+            using System;
+
+            public class EntityFactory
+            {
+                public Guid Parse(string id)
+                {
+                    return Guid.Parse(id);
+                }
+            }
+            """;
+
+        await CSharpAnalyzerVerifier<GuidNewGuidAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+
+    [Fact]
+    public async Task GuidEmpty_ShouldNotReportDiagnostic()
+    {
+        const string source = """
+            using System;
+
+            public class EntityFactory
+            {
+                public Guid GetEmpty()
+                {
+                    return Guid.Empty;
+                }
+            }
+            """;
+
+        await CSharpAnalyzerVerifier<GuidNewGuidAnalyzer>.VerifyAnalyzerAsync(source);
+    }
+}
