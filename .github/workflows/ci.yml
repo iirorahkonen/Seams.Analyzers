@@ -24,6 +24,34 @@ jobs:
         with:
           fetch-depth: 0  # Full history required for GitVersion
 
+      - name: Validate semver tag in PR
+        if: github.event_name == 'pull_request'
+        run: |
+          # Check PR title and commit messages for +semver: tag
+          PR_TITLE="${{ github.event.pull_request.title }}"
+
+          # Get all commit messages in the PR
+          COMMITS=$(git log --format=%B origin/${{ github.base_ref }}..HEAD)
+
+          # Check if +semver: exists in title or any commit
+          if echo "$PR_TITLE" | grep -qiE '\+semver:\s*(patch|minor|major)'; then
+            echo "Found +semver tag in PR title"
+            exit 0
+          fi
+
+          if echo "$COMMITS" | grep -qiE '\+semver:\s*(patch|minor|major)'; then
+            echo "Found +semver tag in commit messages"
+            exit 0
+          fi
+
+          echo "::error::PR must include '+semver: patch', '+semver: minor', or '+semver: major' in the title or commit message"
+          echo ""
+          echo "Examples:"
+          echo "  +semver: patch  - Bug fixes (1.0.0 -> 1.0.1)"
+          echo "  +semver: minor  - New features (1.0.0 -> 1.1.0)"
+          echo "  +semver: major  - Breaking changes (1.0.0 -> 2.0.0)"
+          exit 1
+
       - name: Check for source changes
         id: changes
         uses: dorny/paths-filter@v3
