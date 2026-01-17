@@ -55,3 +55,8 @@ ignore:
   sha: []
 
 commit-message-incrementing: Enabled
+
+# Strict patterns to prevent false matches from dependabot's "semver-major" etc.
+major-version-bump-message: '\+semver:\s*(major|breaking)'
+minor-version-bump-message: '\+semver:\s*(minor|feature)'
+patch-version-bump-message: '\+semver:\s*(patch|fix)'
