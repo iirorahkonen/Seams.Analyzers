@@ -44,6 +44,11 @@
     <ItemGroup>
       <TfmSpecificPackageFile Include="$(OutputPath)\$(AssemblyName).dll" PackagePath="analyzers/dotnet/cs" />
     </ItemGroup>
+    <!-- Add lib folder placeholder for NuGet framework detection -->
+    <WriteLinesToFile File="$(IntermediateOutputPath)_._" Lines="" Overwrite="true" />
+    <ItemGroup>
+      <TfmSpecificPackageFile Include="$(IntermediateOutputPath)_._" PackagePath="lib/netstandard2.0" />
+    </ItemGroup>
   </Target>
 
 </Project>
