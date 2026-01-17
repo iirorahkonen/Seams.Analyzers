@@ -15,6 +15,7 @@ public static class DiagnosticDescriptors
     private const string InheritanceBlockersCategory = "InheritanceBlockers";
     private const string GlobalStateCategory = "GlobalState";
     private const string InfrastructureCategory = "Infrastructure";
+    private const string ComplexityCategory = "Complexity";
 
     // Category A: Direct Dependencies
 
@@ -217,4 +218,16 @@ public static class DiagnosticDescriptors
         isEnabledByDefault: true,
         description: "Using Random.Shared directly makes code non-deterministic and hard to test. Consider injecting a Random instance or using a seeded Random for predictable test behavior.",
         helpLinkUri: HelpLinkBase + "SEAM019.md");
+
+    // Category G: Complexity
+
+    public static readonly DiagnosticDescriptor HighCyclomaticComplexity = new(
+        DiagnosticIds.HighCyclomaticComplexity,
+        title: "Method has high cyclomatic complexity",
+        messageFormat: "Method '{0}' has cyclomatic complexity of {1} (threshold: {2})",
+        category: ComplexityCategory,
+        defaultSeverity: DiagnosticSeverity.Warning,
+        isEnabledByDefault: true,
+        description: "Methods with high cyclomatic complexity are difficult to test and maintain. Consider breaking down into smaller methods.",
+        helpLinkUri: HelpLinkBase + "SEAM020.md");
 }

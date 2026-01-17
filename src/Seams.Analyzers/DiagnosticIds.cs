@@ -36,4 +36,7 @@ public static class DiagnosticIds
 
     // Category F: Non-Deterministic Dependencies
     public const string RandomShared = "SEAM019";
+
+    // Category G: Complexity
+    public const string HighCyclomaticComplexity = "SEAM020";
 }

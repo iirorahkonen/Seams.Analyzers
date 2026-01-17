@@ -5,4 +5,4 @@
 
 Rule ID | Category | Severity | Notes
 --------|----------|----------|-------
-SEAM019 | StaticDependencies | Info | Random.Shared creates non-deterministic dependency
+SEAM020 | Complexity | Warning | Method has high cyclomatic complexity

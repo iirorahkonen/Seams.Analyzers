@@ -73,6 +73,27 @@ public static class AnalyzerConfigOptions
     }
 
     /// <summary>
+    /// Gets the cyclomatic complexity threshold for SEAM020.
+    /// Example: dotnet_code_quality.SEAM020.cyclomatic_complexity_threshold = 25
+    /// </summary>
+    public static int GetCyclomaticComplexityThreshold(
+        AnalyzerOptions options,
+        SyntaxTree syntaxTree,
+        int defaultValue = 25)
+    {
+        var key = $"{Prefix}{DiagnosticIds.HighCyclomaticComplexity}.cyclomatic_complexity_threshold";
+        var optionsProvider = options.AnalyzerConfigOptionsProvider.GetOptions(syntaxTree);
+
+        if (optionsProvider.TryGetValue(key, out var value) &&
+            int.TryParse(value, out var threshold))
+        {
+            return threshold;
+        }
+
+        return defaultValue;
+    }
+
+    /// <summary>
     /// Checks if a type should be excluded from analysis.
     /// </summary>
     public static bool IsTypeExcluded(
